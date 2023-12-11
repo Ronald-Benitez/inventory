@@ -40,7 +40,7 @@ export default function App() {
         <>
             <Navbar disableAnimation isBordered className="bg-slate-900">
                 <NavbarContent className="sm:hidden" justify="start">
-                    <NavbarMenuToggle />
+                    <NavbarMenuToggle className="text-white" />
                 </NavbarContent>
 
                 <NavbarContent className="sm:hidden pr-3" justify="center">
@@ -86,7 +86,7 @@ export default function App() {
                             >
                                 <Link
                                     href={item.href}
-                                    className="text-white"
+                                    className="text-black"
                                 >
                                     {item.name}
                                 </Link>
