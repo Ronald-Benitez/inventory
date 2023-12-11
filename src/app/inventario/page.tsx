@@ -51,7 +51,7 @@ export default function Inventory() {
     return (
         <>
             <Toaster />
-            <main className="flex min-h-screen flex-col items-center">
+            <div className="flex flex-col items-center">
 
                 <h1 className="text-4xl font-bold text-center my-2">Inventario</h1>
                 <div className="flex justify-center my-2">
@@ -72,7 +72,7 @@ export default function Inventory() {
                     >
                         <IconArrowBadgeLeftFilled />
                     </Button>
-                    <p className="text-white text-center">Items</p>
+                    <p className=" text-center">Items</p>
                     <select
                         value={take}
                         onChange={(e) => setTake(Number(e.target.value))}
@@ -83,7 +83,7 @@ export default function Inventory() {
                         <option key={25} value={25} className="text-black">25</option>
                         <option key={50} value={50} className="text-black">50</option>
                     </select>
-                    <p className="text-white text-center">Página {page}</p>
+                    <p className="text-center">Página {page}</p>
                     <Button
                         color="secondary"
                         onClick={() => handlePage(false)}
@@ -94,7 +94,7 @@ export default function Inventory() {
                         <IconArrowBadgeRightFilled />
                     </Button>
                 </div>
-            </main>
+            </div>
         </>
     )
 
