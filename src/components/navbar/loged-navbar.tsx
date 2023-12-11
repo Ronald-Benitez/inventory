@@ -19,6 +19,10 @@ export default function App() {
         {
             name: "Perfil",
             href: "/perfil"
+        },
+        {
+            name: "Inventario",
+            href: "/inventario"
         }
     ];
 
@@ -54,6 +58,9 @@ export default function App() {
                     </Link>
                     <Link href="/perfil" className="text-white">
                         Perfil
+                    </Link>
+                    <Link href="/inventario" className="text-white">
+                        Inventario
                     </Link>
 
                 </NavbarContent>
