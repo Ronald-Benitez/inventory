@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcript from "bcryptjs";
-import { type Users } from "@prisma/client";
 import { cookies } from "next/headers";
+
+import {type Users} from "@/interfaces/Users";
 
 const prisma = new PrismaClient();
 

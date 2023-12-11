@@ -17,6 +17,7 @@ export default function Inventory() {
     const [reload, setReload] = useState(false)
 
     const loadDataTable = () => {
+        toast.remove()
         toast.loading("Cargando inventario...")
         axios.get(`/api/inventory/${skip}/${take}`).then((res) => {
             setData(res.data as Inventory[])
@@ -75,11 +76,12 @@ export default function Inventory() {
                             <SelectItem key={25} value={25} className="text-black">25</SelectItem>
                             <SelectItem key={50} value={50} className="text-black">50</SelectItem>
                         </Select>
-                        <p className="text-white">Página {page}</p>
+                        <p className="text-white text-center">Página {page}</p>
                         <Button
                             color="secondary"
                             onClick={() => handlePage(false)}
                             className="rounded-sm"
+                            disabled={data.length < take}
                         >
                             <IconArrowBadgeRightFilled />
                         </Button>
