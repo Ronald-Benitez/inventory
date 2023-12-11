@@ -22,10 +22,12 @@ export default function Login() {
             name,
             password
         }).then((res) => {
+            toast.remove()
             toast.success("Inicio de sesión exitoso")
             window.location.href = "/dashboard"
         }).catch((err) => {
             const { message } = JSON.parse(err.request.response)
+            toast.remove()
             toast.error(message)
         })
 

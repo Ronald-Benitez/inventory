@@ -36,11 +36,10 @@ export default function App() {
                 <Link href="/" className="text-black bg-white text-xl p-1 rounded">
                     <IconHome size={24} strokeWidth={1.5} color="black" />
                 </Link>
-
             </NavbarContent>
 
             <NavbarContent justify="end">
-                <NavbarItem className="hidden lg:flex">
+                <NavbarItem >
                     <Link href="/login">
                         <IconLogout2 size={24} strokeWidth={1.5} color="white" />
                     </Link>

@@ -59,7 +59,7 @@ export default function Inventory() {
                         <InventoryModal reload={() => { setReload(!reload) }} data={null} />
                     </div>
                     <InventoryTable data={data} reload={() => setReload(!reload)} />
-                    <div className="flex justify-center my-2 w-full items-center gap-3">
+                    <div className="flex justify-center my-2 w-full items-center gap-3 px-2">
                         <Button
                             color="secondary"
                             onClick={() => handlePage(true)}
