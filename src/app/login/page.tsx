@@ -37,7 +37,7 @@ export default function Login() {
     return (
         <>
             <Toaster />
-            <div className="flex min-h-screen items-center justify-center p-24">
+            <div className="flex min-h-screen items-center justify-center px-4">
                 <Card className="w-full max-w-sm">
                     <CardHeader className="flex justify-center my-2">
                         <h4 className="text-center text-2xl ">Iniciar sesión</h4>

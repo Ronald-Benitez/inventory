@@ -8,17 +8,11 @@ import { IconHome, IconLogout2 } from "@tabler/icons-react";
 
 export default function App() {
     const menuItems = [
-        "Profile",
-        "Dashboard",
-        "Activity",
-        "Analytics",
-        "System",
-        "Deployments",
-        "My Settings",
-        "Team Settings",
-        "Help & Feedback",
-        "Log Out",
-    ];
+        {
+            name: "Inicio",
+            href: "/"
+        },
+    ]
 
     return (
         <Navbar disableAnimation isBordered className="bg-slate-900">
@@ -48,20 +42,20 @@ export default function App() {
             </NavbarContent>
 
             <NavbarMenu>
-                {menuItems.map((item, index) => (
-                    <NavbarMenuItem key={`${item}-${index}`}>
-                        <Link
-                            className="w-full"
-                            color={
-                                index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
-                            }
-                            href="#"
-                            size="lg"
+                {
+                    menuItems.map((item, index) => (
+                        <NavbarMenuItem
+                            key={index}
                         >
-                            {item}
-                        </Link>
-                    </NavbarMenuItem>
-                ))}
+                            <Link
+                                href={item.href}
+                                className="text-white"
+                            >
+                                {item.name}
+                            </Link>
+                        </NavbarMenuItem>
+                    ))
+                }
             </NavbarMenu>
         </Navbar>
     );

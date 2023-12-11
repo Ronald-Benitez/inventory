@@ -51,20 +51,24 @@ export default function Inventory() {
     return (
         <>
             <Toaster />
-            <main className="flex min-h-screen flex-col items-center justify-between p-24">
-                <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex flex-col">
+            <main className="flex min-h-screen flex-col items-center">
 
                     <h1 className="text-4xl font-bold text-center my-2">Inventario</h1>
                     <div className="flex justify-center my-2">
                         <InventoryModal reload={() => { setReload(!reload) }} data={null} />
                     </div>
-                    <InventoryTable data={data} reload={() => setReload(!reload)} />
-                    <div className="flex justify-center my-2 w-full items-center gap-3 px-2">
+
+                    <div className="mt-5 rounded w-full lg:w-4/5 mb-4 p-5">
+                        <InventoryTable reload={() => { setReload(!reload) }} data={data} />
+                    </div>
+
+                    <div className="flex justify-center my-2 items-center gap-3 px-2">
                         <Button
                             color="secondary"
                             onClick={() => handlePage(true)}
                             className="rounded-sm"
                             disabled={skip === 0}
+                            size="sm"
                         >
                             <IconArrowBadgeLeftFilled />
                         </Button>
@@ -79,18 +83,17 @@ export default function Inventory() {
                             <SelectItem key={25} value={25} className="text-black">25</SelectItem>
                             <SelectItem key={50} value={50} className="text-black">50</SelectItem>
                         </Select>
-                        <p className="text-white text-center">Página {page}</p>
+                        <p className="text-white text-center"># {page}</p>
                         <Button
                             color="secondary"
                             onClick={() => handlePage(false)}
                             className="rounded-sm"
                             disabled={data.length < take}
+                            size="sm"
                         >
                             <IconArrowBadgeRightFilled />
                         </Button>
                     </div>
-
-                </div>
             </main>
         </>
     )
