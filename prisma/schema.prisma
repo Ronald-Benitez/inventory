@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  unit      String
+  quantity  Int
+  price     Float
+  unitPrice Float
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
