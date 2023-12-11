@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableBody, TableRow, TableCell, TableColumn, Tab, Button } from "@nextui-org/react";
+import { ScrollShadow, Button } from "@nextui-org/react";
 import React from 'react';
 import moment from "moment";
 import "moment/locale/es";
@@ -41,7 +41,7 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
 
     return (
         <>
-            <div className="overflow-auto">
+            <ScrollShadow className="w-full overflow-x-auto" orientation="horizontal" visibility="auto">
                 <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
                     <thead className="bg-gray-50">
                         <tr>
@@ -103,7 +103,7 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </ScrollShadow>
 
             <Toaster />
             <Confirm
