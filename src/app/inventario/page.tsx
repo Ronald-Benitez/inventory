@@ -58,7 +58,7 @@ export default function Inventory() {
                     <InventoryModal reload={() => { setReload(!reload) }} data={null} />
                 </div>
 
-                <div className="mt-5 rounded w-full lg:w-4/5 mb-4">
+                <div className="mt-5 rounded w-full lg:w-4/5 mb-4 px-2">
                     <InventoryTable reload={() => { setReload(!reload) }} data={data} />
                 </div>
 

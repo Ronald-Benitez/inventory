@@ -48,6 +48,15 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
         return true
     }
 
+    const clear = () => {
+        setName("")
+        setQuantity(0)
+        setUnit("")
+        setPrice(0)
+        setUnitPrice(0)
+        setType("")
+    }
+
     const handleSave = () => {
         if (!verifyFields()) {
             return
@@ -64,6 +73,7 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
         }).then((res) => {
             toast.remove()
             toast.success("Producto agregado exitosamente")
+            clear()
             reload()
             onClose()
         }).catch((err) => {

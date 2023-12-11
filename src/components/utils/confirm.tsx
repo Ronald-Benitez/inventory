@@ -25,6 +25,11 @@ function Confirm({ onConfirm, msg, title, open, onCancel }: ConfirmProps) {
         onCancel()
     }
 
+    const confirm = () => {
+        onConfirm()
+        onClose()
+    }
+
     return (
         <>
             <Modal isOpen={isOpen} onClose={cancel} className="w-1/2" backdrop="blur">
@@ -41,7 +46,7 @@ function Confirm({ onConfirm, msg, title, open, onCancel }: ConfirmProps) {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="default" onClick={cancel}>Cancelar</Button>
-                        <Button color="success" onClick={onConfirm}>Confirmar</Button>
+                        <Button color="success" onClick={confirm}>Confirmar</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

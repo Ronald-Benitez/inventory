@@ -36,6 +36,7 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
             const { message } = JSON.parse(err.request.message);
             toast.error(message);
             setConfirmDelete(false);
+            console.log(err);
         });
     };
 
