@@ -41,78 +41,80 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
 
     return (
         <>
-            <ScrollShadow className="w-full overflow-x-auto" orientation="horizontal" visibility="auto">
-                <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actualización
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nombre
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Cantidad
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Unidad
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Precio
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Precio unitario
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tipo
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Acciones
-                            </th>
+            <div className="min-w-full">
+                <div className="mb-8 overflow-auto">
+                    <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actualización
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Nombre
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Cantidad
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Unidad
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Precio
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Precio unitario
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Tipo
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Acciones
+                                </th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item: Inventory) => (
-                            <tr key={item.id} className="border-t">
-                                <td  className="px-6 py-4 whitespace-nowrap">
-                                    {firstUpperCase(moment(item.updatedAt).locale("es").fromNow())}
-                                </td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.name}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.quantity}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.unit}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.price}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.unitPrice}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">{item.type}</td>
-                                <td  className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex justify-center space-x-2">
-                                        <InventoryModal reload={reload} data={item} />
-                                        <Button
-                                            className="rounded-sm bg-red-500 text-white px-2 py-1"
-                                            onClick={() => {
-                                                setSelected(item);
-                                                setConfirmDelete(true);
-                                            }}
-                                            size="sm"
-                                        >
-                                            <IconTrash size={20} strokeWidth={1.5} />
-                                        </Button>
-                                    </div>
-                                </td>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </ScrollShadow>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200 border">
+                            {data.map((item: Inventory) => (
+                                <tr key={item.id} className="border-t">
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                        {firstUpperCase(moment(item.updatedAt).locale("es").fromNow())}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.quantity}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.unit}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.price}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.unitPrice}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.type}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                        <div className="flex justify-center space-x-2">
+                                            <InventoryModal reload={reload} data={item} />
+                                            <Button
+                                                className="rounded-sm bg-red-500 text-white px-2 py-1"
+                                                onClick={() => {
+                                                    setSelected(item);
+                                                    setConfirmDelete(true);
+                                                }}
+                                                size="sm"
+                                            >
+                                                <IconTrash size={20} strokeWidth={1.5} />
+                                            </Button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-            <Toaster />
-            <Confirm
-                open={confirmDelete}
-                title="Eliminar producto"
-                msg={`¿Estás seguro de eliminar el producto: ${selected?.name}?`}
-                onConfirm={handleDelete}
-                onCancel={() => setConfirmDelete(!confirmDelete)}
-            />
+                <Toaster />
+                <Confirm
+                    open={confirmDelete}
+                    title="Eliminar producto"
+                    msg={`¿Estás seguro de eliminar el producto: ${selected?.name}?`}
+                    onConfirm={handleDelete}
+                    onCancel={() => setConfirmDelete(!confirmDelete)}
+                />
+            </div>
         </>
     );
 }
