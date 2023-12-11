@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcript from "bcryptjs";
 import { cookies } from "next/headers";
 
-import {type Users} from "@/interfaces/Users";
+import {type Users} from "@prisma/client";
 
 const prisma = new PrismaClient();
 

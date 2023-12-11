@@ -8,6 +8,7 @@ import { type Inventory } from "@prisma/client"
 import { IconArrowBadgeLeftFilled, IconArrowBadgeRightFilled } from "@tabler/icons-react";
 
 import InventoryTable from "@/components/inventory/inventory-table"
+import InventoryModal from "@/components/inventory/inventory-modal"
 
 export default function Inventory() {
     const [data, setData] = useState<Inventory[] | []>([])
@@ -54,8 +55,10 @@ export default function Inventory() {
                 <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex flex-col">
 
                     <h1 className="text-4xl font-bold text-center my-2">Inventario</h1>
-
-                    <InventoryTable data={data} />
+                    <div className="flex justify-center my-2">
+                        <InventoryModal reload={() => { setReload(!reload) }} data={null} />
+                    </div>
+                    <InventoryTable data={data} reload={() => setReload(!reload)} />
                     <div className="flex justify-center my-2 w-full items-center gap-3">
                         <Button
                             color="secondary"

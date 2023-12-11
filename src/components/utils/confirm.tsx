@@ -1,20 +1,46 @@
 "use client"
 
 import { Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Button, useDisclosure } from "@nextui-org/react"
+import { useEffect } from "react"
 
-function Confirm(onConfirm: any, msg: string, title: string) {
+interface ConfirmProps {
+    onConfirm: () => void
+    msg: string
+    title: string
+    open: boolean
+    onCancel: () => void
+}
+
+function Confirm({ onConfirm, msg, title, open, onCancel }: ConfirmProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    useEffect(() => {
+        if (open) {
+            onOpen()
+        }
+    }, [open])
+
+    const cancel = () => {
+        onClose()
+        onCancel()
+    }
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose} className="w-1/2">
+            <Modal isOpen={isOpen} onClose={cancel} className="w-1/2" backdrop="blur">
                 <ModalContent>
-                    <ModalHeader>{title}</ModalHeader>
+                    <ModalHeader>
+                        <p className="text-black">
+                            {title}
+                        </p>
+                    </ModalHeader>
                     <ModalBody>
-                        {msg}
+                        <p className="text-black">
+                            {msg}
+                        </p>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="default" onClick={onClose}>Cancelar</Button>
+                        <Button color="default" onClick={cancel}>Cancelar</Button>
                         <Button color="success" onClick={onConfirm}>Confirmar</Button>
                     </ModalFooter>
                 </ModalContent>
