@@ -36,6 +36,8 @@ model Products {
   name      String   @unique
   type      Types    @relation(fields: [typeId], references: [id])
   typeId    Int
+  enterprise Enterprises @relation(fields: [enterpriseId], references: [id])
+  enterpriseId Int
   description String
   price     Float
   createdAt DateTime @default(now())
@@ -65,4 +67,5 @@ model Enterprises {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   inventories Inventory[]
+  products Products[]
 }

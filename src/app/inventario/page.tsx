@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@nextui-org/react"
+import { Button, Select, SelectItem, Input } from "@nextui-org/react"
 import toast, { Toaster } from "react-hot-toast"
 import axios from "axios"
 import { type Inventory, type Enterprises, type Types } from "@prisma/client"
 import { IconArrowBadgeLeftFilled, IconArrowBadgeRightFilled } from "@tabler/icons-react";
+import { useDebounce } from "@uidotdev/usehooks"
 
 import InventoryTable from "@/components/inventory/inventory-table"
 import InventoryModal from "@/components/inventory/inventory-modal"
@@ -18,12 +19,16 @@ export default function Inventory() {
     const [reload, setReload] = useState(false)
     const [enterprises, setEnterprises] = useState<Enterprises[] | []>([])
     const [types, setTypes] = useState<Types[] | []>([])
+    const [filterColumn, setFilterColumn] = useState("")
+    const [filterValue, setFilterValue] = useState("")
+    const debouncedFilterValue = useDebounce(filterValue, 500)
 
 
     const loadDataTable = () => {
+        const url = filterColumn === "" ? `/api/inventory/${skip}/${take}` : `/api/inventory/${skip}/${take}/${filterColumn}/${filterValue}`
         toast.remove()
         toast.loading("Cargando inventario...")
-        axios.get(`/api/inventory/${skip}/${take}`).then((res) => {
+        axios.get(url).then((res) => {
             setData(res.data as Inventory[])
             toast.remove()
             if (res.data.length === 0) {
@@ -34,6 +39,7 @@ export default function Inventory() {
             const { message } = JSON.parse(err.request.message)
             toast.remove()
             toast.error(message)
+            console.error(err)
         })
     }
 
@@ -53,6 +59,11 @@ export default function Inventory() {
     }, [])
 
     useEffect(() => {
+        if (filterColumn === "") return
+        loadDataTable()
+    }, [debouncedFilterValue])
+
+    useEffect(() => {
         loadDataTable()
     }, [skip, take, reload])
 
@@ -66,6 +77,59 @@ export default function Inventory() {
         setPage(page + 1)
     }
 
+    const renderFilter = () => {
+        switch (filterColumn) {
+            case "name":
+                return (
+                    <Input
+                        type="text"
+                        onChange={(e) => setFilterValue(e.target.value)}
+                        className="rounded-sm text-black p-1"
+                        label="Nombre"
+                        placeholder="Nombre"
+                    />
+                )
+            case "enterpriseId":
+                return (
+                    <Select
+                        onChange={(e) => setFilterValue(e.target.value)}
+                        label="Empresa"
+                        placeholder="Empresa"
+                        className="min-w-[150px]"
+                    >
+                        {
+                            enterprises.map((enterprise) => (
+                                <SelectItem key={enterprise.id} value={enterprise.id} >
+                                    {enterprise.name}
+                                </SelectItem>
+                            ))
+                        }
+
+                    </Select>
+                )
+            case "typeId":
+                return (
+                    <Select
+                        onChange={(e) => setFilterValue(e.target.value)}
+                        label="Tipo"
+                        placeholder="Tipo"
+                        className="min-w-[150px]"
+                    >
+                        {
+                            types.map((type) => (
+                                <SelectItem key={type.id} value={type.id} >
+                                    {type.name}
+                                </SelectItem>
+                            ))
+                        }
+
+                    </Select>
+                )
+            default:
+                return null
+        }
+    }
+
     return (
         <>
             <Toaster />
@@ -74,6 +138,25 @@ export default function Inventory() {
                 <h1 className="text-4xl font-bold text-center my-2">Inventario</h1>
                 <div className="flex justify-center my-2">
                     <InventoryModal reload={() => { setReload(!reload) }} data={null} types={types} enterprises={enterprises} />
+                </div>
+                <div className="flex justify-center my-2 items-center gap-3 px-2">
+                    <Select
+                        value={filterColumn}
+                        onChange={(e) => {
+                            setFilterColumn(e.target.value)
+                            setFilterValue("")
+                        }}
+                        className="rounded-sm text-black p-1 min-w-[150px]"
+                        label="Filtrar por..."
+                    >
+                        <SelectItem key={0} value="" className="text-black">Filtrar por...</SelectItem>
+                        <SelectItem key={"name"} value="name" className="text-black">Nombre</SelectItem>
+                        <SelectItem key={"enterpriseId"} value="enterpriseId" className="text-black">Empresa</SelectItem>
+                        <SelectItem key={"typeId"} value="typeId" className="text-black">Tipo</SelectItem>
+                    </Select>
+                    {
+                        renderFilter()
+                    }
                 </div>
 
                 <div className="mt-5 rounded w-full lg:w-4/5 mb-4 px-2">

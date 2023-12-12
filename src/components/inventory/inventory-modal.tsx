@@ -184,30 +184,34 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
                             onChange={(e) => setUnitPrice(parseInt(e.target.value))}
                             className="my-2"
                         />
-                        <select
+                        <Select
+                            placeholder="Seleccione un tipo"
                             value={type}
                             onChange={(e) => setType(Number(e.target.value))}
-                            className="rounded-lg text-gray-500 p-3 bg-gray-100"
+                            className="my-2"
+                            defaultSelectedKeys={[type.toString()]}
+                            label="Tipo"
                         >
-                            <option key={0} value={0} className="text-black">Seleccione un tipo</option>
                             {
                                 types?.map((item) => (
-                                    <option key={item.id} value={item.id} className="text-black">{item.name}</option>
+                                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
                                 ))
                             }
-                        </select>
-                        <select
+                        </Select>
+                        <Select
+                            placeholder="Seleccione una empresa"
                             value={enterprise}
                             onChange={(e) => setEnterprise(Number(e.target.value))}
-                            className="rounded-lg text-gray-500 p-3 bg-gray-100"
+                            className="my-2"
+                            defaultSelectedKeys={[enterprise.toString()]}
+                            label="Empresa"
                         >
-                            <option key={0} value={0} >Seleccione una empresa</option>
                             {
                                 enterprises?.map((item) => (
-                                    <option key={item.id} value={item.id} className="text-black">{item.name}</option>
+                                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
                                 ))
                             }
-                        </select>
+                        </Select>
                     </ModalBody>
                     <ModalFooter>
                         <Button
