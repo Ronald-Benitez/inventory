@@ -20,7 +20,7 @@ model Inventory {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   unit      String
-  quantity  Int
+  quantity  Float
   price     Float
   unitPrice Float
   type      Types    @relation(fields: [typeId], references: [id])

@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       take,
       skip,
       orderBy: {
-        name: "asc",
+        updatedAt: "asc",
       },
     });
 

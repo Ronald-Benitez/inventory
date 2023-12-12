@@ -21,11 +21,21 @@ export default function Inventory() {
     const [types, setTypes] = useState<Types[] | []>([])
     const [filterColumn, setFilterColumn] = useState("")
     const [filterValue, setFilterValue] = useState("")
+    const [orderBy, setOrderBy] = useState("")
+    const [order, setOrder] = useState("desc")
     const debouncedFilterValue = useDebounce(filterValue, 500)
 
 
+    const getUrl = () => {
+        const orderC = orderBy !== "" ? `${orderBy}:${order}` : ""
+        if (orderBy === "" && filterColumn === "") return `/api/inventory/${skip}/${take}`
+        if (orderBy !== "" && filterColumn === "") return `/api/inventory/${skip}/${take}/${orderC}`
+        if (orderBy === "" && filterColumn !== "") return `/api/inventory/${skip}/${take}/${filterColumn}/${filterValue}`
+        return `/api/inventory/${skip}/${take}/${filterColumn}/${filterValue}/${orderC}`
+    }
+
     const loadDataTable = () => {
-        const url = filterColumn === "" ? `/api/inventory/${skip}/${take}` : `/api/inventory/${skip}/${take}/${filterColumn}/${filterValue}`
+        const url = getUrl()
         toast.remove()
         toast.loading("Cargando inventario...")
         axios.get(url).then((res) => {
@@ -36,10 +46,8 @@ export default function Inventory() {
 
             }
         }).catch((err) => {
-            const { message } = JSON.parse(err.request.message)
             toast.remove()
-            toast.error(message)
-            console.error(err)
+            toast.error("No se pudo cargar el inventario")
         })
     }
 
@@ -47,14 +55,12 @@ export default function Inventory() {
         axios.get("/api/enterprises").then((res) => {
             setEnterprises(res.data as Enterprises[])
         }).catch((err) => {
-            const { message } = JSON.parse(err.request.message)
-            toast.error(message)
+            toast.error("No se pudo cargar las empresas")
         })
         axios.get("/api/types").then((res) => {
             setTypes(res.data as Types[])
         }).catch((err) => {
-            const { message } = JSON.parse(err.request.message)
-            toast.error(message)
+            toast.error("No se pudo cargar los tipos")
         })
     }, [])
 
@@ -65,7 +71,7 @@ export default function Inventory() {
 
     useEffect(() => {
         loadDataTable()
-    }, [skip, take, reload])
+    }, [skip, take, reload, orderBy, order])
 
     const handlePage = (flag: boolean) => {
         if (flag) {
@@ -140,6 +146,30 @@ export default function Inventory() {
                     <InventoryModal reload={() => { setReload(!reload) }} data={null} types={types} enterprises={enterprises} />
                 </div>
                 <div className="flex justify-center my-2 items-center gap-3 px-2">
+                    <Select
+                        value={orderBy}
+                        onChange={(e) => setOrderBy(e.target.value)}
+                        className="rounded-sm text-black p-1 min-w-[150px]"
+                        label="Ordenar por..."
+                    >
+                        <SelectItem key={"name"} value="name" className="text-black">Nombre</SelectItem>
+                        <SelectItem key={"quantity"} value="quantity" className="text-black">Cantidad</SelectItem>
+                        <SelectItem key={"unit"} value="unit" className="text-black">Unidad</SelectItem>
+                        <SelectItem key={"price"} value="price" className="text-black">Precio</SelectItem>
+                        <SelectItem key={"unitPrice"} value="unitPrice" className="text-black">Precio unitario</SelectItem>
+                        <SelectItem key={"typeId"} value="typeId" className="text-black">Tipo</SelectItem>
+                        <SelectItem key={"enterpriseId"} value="enterpriseId" className="text-black">Empresa</SelectItem>
+                    </Select>
+                    <Select
+                        value={order}
+                        onChange={(e) => setOrder(e.target.value)}
+                        className="rounded-sm text-black p-1 min-w-[150px]"
+                        label="Orden"
+                        defaultSelectedKeys={["desc"]}
+                    >
+                        <SelectItem key={"asc"} value="asc" className="text-black">Ascendente</SelectItem>
+                        <SelectItem key={"desc"} value="desc" className="text-black">Descendente</SelectItem>
+                    </Select>
                     <Select
                         value={filterColumn}
                         onChange={(e) => {

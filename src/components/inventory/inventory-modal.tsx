@@ -26,7 +26,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
 
 
     const calculateUnitPrice = () => {
-        const unitPrice = (price / quantity).toFixed(2)
+        const unitPrice = (price / quantity).toFixed(4)
         setUnitPrice(parseFloat(unitPrice))
     }
 
@@ -59,6 +59,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
         setPrice(0)
         setUnitPrice(0)
         setType(0)
+        setEnterprise(0)
     }
 
     const handleSave = () => {
@@ -158,7 +159,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
                             placeholder="Cantidad"
                             type="number"
                             value={quantity.toString()}
-                            onChange={(e) => setQuantity(parseInt(e.target.value))}
+                            onChange={(e) => setQuantity(parseFloat(e.target.value))}
                             className="my-2"
                         />
                         <Input
@@ -181,7 +182,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
                             placeholder="Precio por unidad"
                             type="number"
                             value={unitPrice.toString()}
-                            onChange={(e) => setUnitPrice(parseInt(e.target.value))}
+                            onChange={(e) => setUnitPrice(parseFloat(e.target.value))}
                             className="my-2"
                         />
                         <Select

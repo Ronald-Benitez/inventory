@@ -8,24 +8,32 @@ export async function GET(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   try {
-    const { skip, take, filterColumn, filter, filterIsString } = parseUrl(
-      pathname,
-      "/api/inventory/"
-    );
+    const { skip, take, filterColumn, filter, filterIsString, orderBy } =
+      parseUrl(pathname, "/api/inventory/");
     if (!take) {
       return NextResponse.json(
         { message: "Error al cargar la paginación" },
         { status: 500 }
       );
     }
+    let orderByObject = {};
+    if (orderBy) {
+      const splited = orderBy.split(":");
+      orderByObject = {
+        [splited[0]]: splited[1],
+      };
+    } else {
+      orderByObject = {
+        updatedAt: "desc",
+      };
+    }
+
 
     if (filterColumn && filter) {
       const data = await prisma.inventory.findMany({
         take,
         skip,
-        orderBy: {
-          name: "asc",
-        },
+        orderBy: orderByObject,
         where: {
           [filterColumn]: filterIsString
             ? {
@@ -43,9 +51,7 @@ export async function GET(req: NextRequest) {
     const data = await prisma.inventory.findMany({
       take,
       skip,
-      orderBy: {
-        name: "asc",
-      },
+      orderBy: orderByObject,
     });
 
     return NextResponse.json(data, { status: 200 });
