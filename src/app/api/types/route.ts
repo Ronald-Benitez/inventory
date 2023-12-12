@@ -4,7 +4,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function GET() {
-  const types = await prisma.types.findMany();
+  const types = await prisma.types.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  });
   return NextResponse.json(types);
 }
 

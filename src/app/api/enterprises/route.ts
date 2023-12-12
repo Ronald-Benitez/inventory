@@ -4,7 +4,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function GET(){
-    const enterprises = await prisma.enterprises.findMany();
+    const enterprises = await prisma.enterprises.findMany({
+        orderBy: {
+            name: "asc"
+        }
+    });
     return NextResponse.json(enterprises);
 }
 
@@ -35,5 +39,23 @@ export async function DELETE(req: NextRequest){
     } catch(error){
         console.log(error);
         return NextResponse.json({ message: "Error al eliminar la empresa" }, { status: 500 });
+    }
+}
+
+export async function PUT(req: NextRequest){
+    try{
+        const { id, name } = await req.json();
+        const data = await prisma.enterprises.update({
+            where: {
+                id
+            },
+            data: {
+                name
+            }
+        });
+        return NextResponse.json(data, { status: 200 });
+    } catch(error){
+        console.log(error);
+        return NextResponse.json({ message: "Error al actualizar la empresa" }, { status: 500 });
     }
 }

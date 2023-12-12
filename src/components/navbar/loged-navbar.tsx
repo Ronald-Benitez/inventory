@@ -23,6 +23,14 @@ export default function App() {
         {
             name: "Inventario",
             href: "/inventario"
+        },
+        {
+            name: "Tipos",
+            href: "/tipos"
+        },
+        {
+            name: "Empresas",
+            href: "/empresas"
         }
     ];
 
@@ -61,6 +69,12 @@ export default function App() {
                     </Link>
                     <Link href="/inventario" className="text-white">
                         Inventario
+                    </Link>
+                    <Link href="/tipos" className="text-white">
+                        Tipos
+                    </Link>
+                    <Link href="/empresas" className="text-white">
+                        Empresas
                     </Link>
 
                 </NavbarContent>

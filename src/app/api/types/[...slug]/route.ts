@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   try {
-    const { skip, take } = parseUrl(pathname, "/api/inventory/");
+    const { skip, take } = parseUrl(pathname, "/api/types/");
 
     if (!take) {
       return NextResponse.json(
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const data = await prisma.inventory.findMany({
+    const data = await prisma.types.findMany({
       take,
       skip,
       orderBy: {

@@ -1,12 +1,14 @@
 "use client"
 
-import { Button, Table, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Input, useDisclosure } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { IconTrash } from '@tabler/icons-react';
-import Confirm from '../utils/confirm';
 import { Types } from '@prisma/client';
+
+import Confirm from '../utils/confirm';
+import TypesModal from './types-modal';
 
 interface TypesTableProps {
   data: Types[] | [];
@@ -16,7 +18,6 @@ interface TypesTableProps {
 export default function TypesTable({ data, reload }: TypesTableProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selected, setSelected] = useState<Types | null>(null);
-  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const handleDelete = () => {
     axios
@@ -40,22 +41,26 @@ export default function TypesTable({ data, reload }: TypesTableProps) {
 
   return (
     <>
-      <div className="min-w-full">
+      <div className="min-w-full flex justify-center">
         <div className="mb-8 overflow-auto">
-          <Table>
-            <thead>
+          <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
+            <thead className="bg-gray-50">
               <tr>
-                <th>Nombre</th>
-                <th>Acciones</th>
+                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nombre
+                </th>
+                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.map((item: Types) => (
                 <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap text-black">{item.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-black">
                     <div className="flex justify-center space-x-2">
-                      {/* Add your modal or update logic here */}
+                      <TypesModal data={item} reload={reload} />
                       <Button
                         className="rounded-sm bg-red-500 text-white px-2 py-1"
                         onClick={() => {
@@ -71,7 +76,7 @@ export default function TypesTable({ data, reload }: TypesTableProps) {
                 </tr>
               ))}
             </tbody>
-          </Table>
+          </table>
         </div>
 
         <Toaster />
