@@ -85,18 +85,18 @@ export default function InventoryTable({ data, reload, types, enterprises }: Inv
                                     <td className="px-6 py-4 whitespace-nowrap text-black">
                                         {firstUpperCase(moment(item.updatedAt).locale("es").fromNow())}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.quantity}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.unit}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.price}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.unitPrice}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.quantity}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.unit}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">${item.price}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">${item.unitPrice}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">
                                         {types.find((type) => type.id === item.typeId)?.name}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                    <td className="px-6 py-4 whitespace-nowrap text-black  text-center">
                                         {enterprises.find((enterprise) => enterprise.id === item.enterpriseId)?.name}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                    <td className="px-6 py-4 whitespace-nowrap text-black  text-center">
                                         <div className="flex justify-center space-x-2">
                                             <InventoryModal reload={reload} data={item} types={types} enterprises={enterprises} />
                                             <Button
