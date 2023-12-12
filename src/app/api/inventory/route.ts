@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
             quantity,
             price,
             unitPrice,
-            type
+            type,
+            typeId,
+            enterpriseId
         } = await req.json();
 
         const data = await prisma.inventory.create({
@@ -22,7 +24,8 @@ export async function POST(req: NextRequest) {
                 quantity,
                 price,
                 unitPrice,
-                type
+                typeId,
+                enterpriseId
             }
         });
 
@@ -60,7 +63,8 @@ export async function PUT(req: NextRequest) {
             quantity,
             price,
             unitPrice,
-            type
+            typeId,
+            enterpriseId
         } = await req.json();
 
         const data = await prisma.inventory.update({
@@ -73,7 +77,8 @@ export async function PUT(req: NextRequest) {
                 quantity,
                 price,
                 unitPrice,
-                type
+                typeId,
+                enterpriseId
             }
         });
 

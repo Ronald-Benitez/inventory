@@ -2,7 +2,7 @@
 
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Input, useDisclosure, Select, SelectItem } from '@nextui-org/react'
 import { useState, useEffect, use } from 'react'
-import { type Inventory } from '@prisma/client'
+import { type Inventory, type Types, type Enterprises } from '@prisma/client'
 import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast'
 import { IconPencil } from '@tabler/icons-react'
@@ -10,16 +10,19 @@ import { IconPencil } from '@tabler/icons-react'
 interface InventoryModalProps {
     data: Inventory | null
     reload: () => void
+    types: Types[] | []
+    enterprises: Enterprises[] | []
 }
 
-function InventoryModal({ data, reload }: InventoryModalProps) {
+function InventoryModal({ data, reload, types, enterprises }: InventoryModalProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [name, setName] = useState("")
     const [quantity, setQuantity] = useState(0)
     const [unit, setUnit] = useState("")
     const [price, setPrice] = useState(0)
     const [unitPrice, setUnitPrice] = useState(0)
-    const [type, setType] = useState("")
+    const [type, setType] = useState(0)
+    const [enterprise, setEnterprise] = useState(0)
 
 
     const calculateUnitPrice = () => {
@@ -34,13 +37,14 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
             setUnit(data.unit)
             setPrice(data.price)
             setUnitPrice(data.unitPrice)
-            setType(data.type)
+            setType(data.typeId)
+            setEnterprise(data.enterpriseId)
         }
     }, [data])
 
 
     const verifyFields = () => {
-        if (name === "" || quantity === 0 || unit === "" || price === 0 || unitPrice === 0 || type === "") {
+        if (name === "" || quantity === 0 || unit === "" || price === 0 || unitPrice === 0 || !type || !enterprise) {
             toast.error("Todos los campos son requeridos")
             return false
         }
@@ -54,7 +58,7 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
         setUnit("")
         setPrice(0)
         setUnitPrice(0)
-        setType("")
+        setType(0)
     }
 
     const handleSave = () => {
@@ -69,7 +73,8 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
             unit,
             price,
             unitPrice,
-            type
+            typeId: type,
+            enterpriseId: enterprise
         }).then((res) => {
             toast.remove()
             toast.success("Producto agregado exitosamente")
@@ -77,9 +82,8 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
             reload()
             onClose()
         }).catch((err) => {
-            const { message } = JSON.parse(err.request.message)
             toast.remove()
-            toast.error(message)
+            toast.error("Ocurrió un error al agregar el producto")
         })
     }
 
@@ -96,7 +100,8 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
             unit,
             price,
             unitPrice,
-            type
+            typeId: type,
+            enterpriseId: enterprise
         }).then((res) => {
             toast.remove()
             toast.success("Producto actualizado exitosamente")
@@ -168,7 +173,7 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
                             placeholder="Precio"
                             type="number"
                             value={price.toString()}
-                            onChange={(e) => setPrice(parseInt(e.target.value))}
+                            onChange={(e) => setPrice(parseFloat(e.target.value))}
                             className="my-2"
                         />
                         <Input
@@ -179,17 +184,30 @@ function InventoryModal({ data, reload }: InventoryModalProps) {
                             onChange={(e) => setUnitPrice(parseInt(e.target.value))}
                             className="my-2"
                         />
-                        <Select
-                            placeholder="Tipo"
+                        <select
                             value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            className="rounded-sm"
-                            label="Tipo"
-                            selectedKeys={[type]}
+                            onChange={(e) => setType(Number(e.target.value))}
+                            className="rounded-lg text-gray-500 p-3 bg-gray-100"
                         >
-                            <SelectItem key="Salon" value="compra" className="text-black" >Salon de belleza</SelectItem>
-                            <SelectItem key="Cafeteria" value="venta" className="text-black">Cafetería</SelectItem>
-                        </Select>
+                            <option key={0} value={0} className="text-black">Seleccione un tipo</option>
+                            {
+                                types?.map((item) => (
+                                    <option key={item.id} value={item.id} className="text-black">{item.name}</option>
+                                ))
+                            }
+                        </select>
+                        <select
+                            value={enterprise}
+                            onChange={(e) => setEnterprise(Number(e.target.value))}
+                            className="rounded-lg text-gray-500 p-3 bg-gray-100"
+                        >
+                            <option key={0} value={0} >Seleccione una empresa</option>
+                            {
+                                enterprises?.map((item) => (
+                                    <option key={item.id} value={item.id} className="text-black">{item.name}</option>
+                                ))
+                            }
+                        </select>
                     </ModalBody>
                     <ModalFooter>
                         <Button

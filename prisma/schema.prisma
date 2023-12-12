@@ -23,7 +23,46 @@ model Inventory {
   quantity  Int
   price     Float
   unitPrice Float
-  type      String
+  type      Types    @relation(fields: [typeId], references: [id])
+  typeId    Int
+  enterprise Enterprises @relation(fields: [enterpriseId], references: [id])
+  enterpriseId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Products {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  type      Types    @relation(fields: [typeId], references: [id])
+  typeId    Int
+  description String
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Types {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  inventories Inventory[]
+  products Products[]
+}
+
+model Sales {
+  id        Int      @id @default(autoincrement())
+  products  String
+  total     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Enterprises {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  inventories Inventory[]
 }

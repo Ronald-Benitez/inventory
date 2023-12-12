@@ -2,7 +2,7 @@ import { ScrollShadow, Button } from "@nextui-org/react";
 import React from 'react';
 import moment from "moment";
 import "moment/locale/es";
-import { type Inventory } from "@prisma/client";
+import { type Enterprises, type Types, type Inventory } from "@prisma/client";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -13,9 +13,11 @@ import { IconTrash } from "@tabler/icons-react";
 interface InventoryTableProps {
     data: Inventory[] | [];
     reload: () => void;
+    types: Types[] | [];
+    enterprises: Enterprises[] | [];
 }
 
-export default function InventoryTable({ data, reload }: InventoryTableProps) {
+export default function InventoryTable({ data, reload, types, enterprises }: InventoryTableProps) {
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [selected, setSelected] = React.useState<Inventory | null>(null);
 
@@ -69,6 +71,9 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
                                     Tipo
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Empresa
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Acciones
                                 </th>
 
@@ -85,10 +90,15 @@ export default function InventoryTable({ data, reload }: InventoryTableProps) {
                                     <td className="px-6 py-4 whitespace-nowrap text-black">{item.unit}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-black">{item.price}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-black">{item.unitPrice}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">{item.type}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                        {types.find((type) => type.id === item.typeId)?.name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-black">
+                                        {enterprises.find((enterprise) => enterprise.id === item.enterpriseId)?.name}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-black">
                                         <div className="flex justify-center space-x-2">
-                                            <InventoryModal reload={reload} data={item} />
+                                            <InventoryModal reload={reload} data={item} types={types} enterprises={enterprises} />
                                             <Button
                                                 className="rounded-sm bg-red-500 text-white px-2 py-1"
                                                 onClick={() => {

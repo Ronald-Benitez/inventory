@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@nextui-org/react"
 import toast, { Toaster } from "react-hot-toast"
 import axios from "axios"
-import { type Inventory } from "@prisma/client"
+import { type Inventory, type Enterprises, type Types } from "@prisma/client"
 import { IconArrowBadgeLeftFilled, IconArrowBadgeRightFilled } from "@tabler/icons-react";
 
 import InventoryTable from "@/components/inventory/inventory-table"
@@ -16,6 +16,9 @@ export default function Inventory() {
     const [take, setTake] = useState(5)
     const [page, setPage] = useState(1)
     const [reload, setReload] = useState(false)
+    const [enterprises, setEnterprises] = useState<Enterprises[] | []>([])
+    const [types, setTypes] = useState<Types[] | []>([])
+
 
     const loadDataTable = () => {
         toast.remove()
@@ -33,6 +36,21 @@ export default function Inventory() {
             toast.error(message)
         })
     }
+
+    useEffect(() => {
+        axios.get("/api/enterprises").then((res) => {
+            setEnterprises(res.data as Enterprises[])
+        }).catch((err) => {
+            const { message } = JSON.parse(err.request.message)
+            toast.error(message)
+        })
+        axios.get("/api/types").then((res) => {
+            setTypes(res.data as Types[])
+        }).catch((err) => {
+            const { message } = JSON.parse(err.request.message)
+            toast.error(message)
+        })
+    }, [])
 
     useEffect(() => {
         loadDataTable()
@@ -55,11 +73,11 @@ export default function Inventory() {
 
                 <h1 className="text-4xl font-bold text-center my-2">Inventario</h1>
                 <div className="flex justify-center my-2">
-                    <InventoryModal reload={() => { setReload(!reload) }} data={null} />
+                    <InventoryModal reload={() => { setReload(!reload) }} data={null} types={types} enterprises={enterprises} />
                 </div>
 
                 <div className="mt-5 rounded w-full lg:w-4/5 mb-4 px-2">
-                    <InventoryTable reload={() => { setReload(!reload) }} data={data} />
+                    <InventoryTable reload={() => { setReload(!reload) }} data={data} types={types} enterprises={enterprises} />
                 </div>
 
                 <div className="flex justify-center my-2 items-center gap-3 px-2">
