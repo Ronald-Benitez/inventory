@@ -9,29 +9,45 @@ import { IconHome, IconLogout } from "@tabler/icons-react";
 export default function App() {
     const menuItems = [
         {
-            name: "Inicio",
+            name: (<p className="bg-white rounded p-1"><IconHome size={24} strokeWidth={1.5} color="black" /></p>),
             href: "/"
         },
         {
             name: "Dashboard",
-            href: "/dashboard"
+            href: "/admin/dashboard"
         },
         {
             name: "Perfil",
-            href: "/perfil"
+            href: "/admin/perfil"
         },
         {
             name: "Inventario",
-            href: "/inventario"
+            href: "/admin/inventario"
         },
         {
             name: "Tipos",
-            href: "/tipos"
+            href: "/admin/tipos"
+        },
+        {
+            name: "Categorias",
+            href: "/admin/categorias"
         },
         {
             name: "Empresas",
-            href: "/empresas"
-        }
+            href: "/admin/empresas"
+        },
+        {
+            name: "Productos",
+            href: "/admin/productos"
+        },
+        {
+            name: "Descuentos",
+            href: "/admin/descuentos"
+        },
+        {
+            name: "Pedidos",
+            href: "/admin/pedidos"
+        },
     ];
 
     const handleLogOut = () => {
@@ -58,25 +74,17 @@ export default function App() {
                 </NavbarContent>
 
                 <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                    <Link href="/" className="text-black bg-white text-xl p-1 rounded">
-                        <IconHome size={24} strokeWidth={1.5} color="black" />
-                    </Link>
-                    <Link href="/dashboard" className="text-white">
-                        Dashboard
-                    </Link>
-                    <Link href="/perfil" className="text-white">
-                        Perfil
-                    </Link>
-                    <Link href="/inventario" className="text-white">
-                        Inventario
-                    </Link>
-                    <Link href="/tipos" className="text-white">
-                        Tipos
-                    </Link>
-                    <Link href="/empresas" className="text-white">
-                        Empresas
-                    </Link>
-
+                    {
+                        menuItems.map((item, index) => (
+                            <Link
+                                href={item.href}
+                                className="text-white"
+                                key={index}
+                            >
+                                {item.name}
+                            </Link>
+                        ))
+                    }
                 </NavbarContent>
 
                 <NavbarContent justify="end">

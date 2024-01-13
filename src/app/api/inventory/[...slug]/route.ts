@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { parseUrl } from "@/app/services/urls";
+import { parseUrl } from "@/utils/urls";
 
 const prisma = new PrismaClient();
 
@@ -28,6 +28,19 @@ export async function GET(req: NextRequest) {
       };
     }
 
+    const include = {
+      type: {
+        select: {
+          name: true,
+        }
+      },
+      enterprise: {
+        select: {
+          name: true
+        }
+      }
+    }
+
 
     if (filterColumn && filter) {
       const data = await prisma.inventory.findMany({
@@ -37,13 +50,14 @@ export async function GET(req: NextRequest) {
         where: {
           [filterColumn]: filterIsString
             ? {
-                contains: filter,
-                mode: "insensitive",
-              }
+              contains: filter,
+              mode: "insensitive",
+            }
             : {
-                equals: Number(filter),
-              },
+              equals: Number(filter),
+            },
         },
+        include
       });
       return NextResponse.json(data, { status: 200 });
     }
@@ -52,6 +66,7 @@ export async function GET(req: NextRequest) {
       take,
       skip,
       orderBy: orderByObject,
+      include
     });
 
     return NextResponse.json(data, { status: 200 });

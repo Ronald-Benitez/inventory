@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getDecodedCookies } from "../services/cookies"
+import { getDecodedCookies } from "@/services/cookies"
 import { Input, Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react"
 import toast, { Toaster } from "react-hot-toast"
 import axios from "axios"

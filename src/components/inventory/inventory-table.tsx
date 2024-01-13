@@ -1,120 +1,80 @@
-import { Button } from "@nextui-org/react";
 import React from 'react';
-import moment from "moment";
-import "moment/locale/es";
-import { type Enterprises, type Types, type Inventory } from "@prisma/client";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { type Types, type Enterprises } from "@prisma/client"
 
 import InventoryModal from "@/components/inventory/inventory-modal";
 import Confirm from "../utils/confirm";
-import { IconTrash } from "@tabler/icons-react";
+import { dateFromNow, normalizedText } from "@/utils/string";
+import { Table, Th, Td, Thead, Tbody, DeleteBtn } from "../ui";
+import { handleDelete } from '@/utils/axiosHandler';
+import { inventoryWithTypeAndEnterprise } from "@/interfaces/tables"
 
 interface InventoryTableProps {
-    data: Inventory[] | [];
+    data: inventoryWithTypeAndEnterprise[] | [];
     reload: () => void;
-    types: Types[] | [];
-    enterprises: Enterprises[] | [];
+    types: Types[] | [],
+    enterprises: Enterprises[] | []
 }
 
 export default function InventoryTable({ data, reload, types, enterprises }: InventoryTableProps) {
     const [confirmDelete, setConfirmDelete] = React.useState(false);
-    const [selected, setSelected] = React.useState<Inventory | null>(null);
+    const [selected, setSelected] = React.useState<inventoryWithTypeAndEnterprise | null>(null);
 
-    const firstUpperCase = (word: string) => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-    };
-
-    const handleDelete = () => {
-        axios.delete("/api/inventory", {
-            data: {
-                id: selected?.id
-            }
-        }).then((res) => {
-            toast.success("Producto eliminado");
-            setConfirmDelete(false);
-            reload();
-        }).catch((err) => {
-            const { message } = JSON.parse(err.request.message);
-            toast.error(message);
-            setConfirmDelete(false);
-            console.log(err);
-        });
-    };
+    const onConfirm = () => {
+        handleDelete({
+            id: selected?.id || 0,
+            reload,
+            url: "/api/inventory",
+            onSuccess: () => toast.success("Producto eliminado"),
+            onError: () => toast.error("Error al eliminar el prducto"),
+            onFinally: () => setConfirmDelete(false)
+        })
+    }
 
     return (
         <>
             <div className="min-w-full flex justify-center">
                 <div className="mb-8 overflow-auto">
-                    <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
-                        <thead className="bg-gray-50">
+                    <Table>
+                        <Thead>
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actualización
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nombre
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Cantidad
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Unidad
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Precio
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Precio unitario
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Tipo
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Empresa
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Acciones
-                                </th>
-
+                                <Th>Actualización</Th>
+                                <Th>Nombre </Th>
+                                <Th>Cantidad</Th>
+                                <Th>Unidad</Th>
+                                <Th>Precio</Th>
+                                <Th>Precio unitario </Th>
+                                <Th>Tipo</Th>
+                                <Th>Empresa</Th>
+                                <Th>Acciones</Th>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200 border">
-                            {data.map((item: Inventory) => (
+                        </Thead>
+                        <Tbody>
+                            {data.map((item: inventoryWithTypeAndEnterprise) => (
                                 <tr key={item.id} className="border-t">
-                                    <td className="px-6 py-4 whitespace-nowrap text-black">
-                                        {firstUpperCase(moment(item.updatedAt).locale("es").fromNow())}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.quantity}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">{item.unit}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">${item.price}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">${item.unitPrice}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black text-center">
-                                        {types.find((type) => type.id === item.typeId)?.name}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black  text-center">
-                                        {enterprises.find((enterprise) => enterprise.id === item.enterpriseId)?.name}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-black  text-center">
+                                    <Td>{dateFromNow(item.updatedAt)}</Td>
+                                    <Td>{normalizedText(item.name)}</Td>
+                                    <Td>{item.quantity}</Td>
+                                    <Td>{item.unit}</Td>
+                                    <Td>${item.price}</Td>
+                                    <Td>${item.unitPrice}</Td>
+                                    <Td>{item.type.name}</Td>
+                                    <Td>{item.enterprise.name}</Td>
+                                    <Td>
                                         <div className="flex justify-center space-x-2">
                                             <InventoryModal reload={reload} data={item} types={types} enterprises={enterprises} />
-                                            <Button
-                                                className="rounded-sm bg-red-500 text-white px-2 py-1"
+                                            <DeleteBtn
                                                 onClick={() => {
                                                     setSelected(item);
                                                     setConfirmDelete(true);
                                                 }}
-                                                size="sm"
-                                            >
-                                                <IconTrash size={20} strokeWidth={1.5} />
-                                            </Button>
+                                            />
                                         </div>
-                                    </td>
+                                    </Td>
                                 </tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </Tbody>
+                    </Table>
                 </div>
 
                 <Toaster />
@@ -122,10 +82,10 @@ export default function InventoryTable({ data, reload, types, enterprises }: Inv
                     open={confirmDelete}
                     title="Eliminar producto"
                     msg={`¿Estás seguro de eliminar el producto: ${selected?.name}?`}
-                    onConfirm={handleDelete}
+                    onConfirm={onConfirm}
                     onCancel={() => setConfirmDelete(!confirmDelete)}
                 />
-            </div>
+            </div >
         </>
     );
 }

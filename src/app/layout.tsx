@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Provider } from "./provider";
@@ -6,9 +6,16 @@ import { Provider } from "./provider";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sistema de inventario',
-  description: 'Sistema de inventario',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  title: 'Sistema empresarial',
+  description: 'Sistema multi empresarial',
+}
+
+export const viewport: Viewport = {
+  // viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false
 }
 
 export default function RootLayout({

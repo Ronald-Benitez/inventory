@@ -11,7 +11,7 @@ export default function App() {
         {
             name: "Inicio",
             href: "/"
-        },
+        }
     ]
 
     return (
@@ -34,7 +34,7 @@ export default function App() {
 
             <NavbarContent justify="end">
                 <NavbarItem >
-                    <Link href="/login">
+                    <Link href="/admin/login">
                         <IconLogout2 size={24} strokeWidth={1.5} color="white" />
                     </Link>
                 </NavbarItem>

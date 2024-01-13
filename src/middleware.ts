@@ -7,10 +7,10 @@ export function middleware(req: NextRequest) {
   const isNext = url.startsWith("/_next");
 
   if (!isPublicRoute && !cookies && !isNext) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/admin/login", req.url));
   }
 
   return NextResponse.next();
 }
 
-const publicRoutes = ["/api/auth", "/login", "/"];
+const publicRoutes = ["/api/auth", "/admin/login", "/"];

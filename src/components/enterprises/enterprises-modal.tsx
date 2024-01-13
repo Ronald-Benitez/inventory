@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { type Enterprises } from '@prisma/client';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { IconPencil } from '@tabler/icons-react';
+
+import { EditBtn } from "../ui"
 
 interface TypesModalProps {
   data: Enterprises | null;
@@ -85,9 +86,7 @@ function TypesModal({ data, reload }: TypesModalProps) {
     <>
       <Toaster />
       {data ? (
-        <Button onClick={onOpen} color="warning" className="rounded-sm" size="sm">
-          <IconPencil size={20} strokeWidth={1.5} />
-        </Button>
+        <EditBtn onClick={onOpen} />
       ) : (
         <Button onClick={onOpen} className="rounded-sm">
           Agregar empresa

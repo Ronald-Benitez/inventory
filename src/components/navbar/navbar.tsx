@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 import PublicNavbar from "@/components/navbar/public-navbar"
 import LogedNavbar from "@/components/navbar/loged-navbar"
-import { getCookies } from "@/app/services/cookies"
+import { getCookies } from "@/services/cookies"
 
 export default function Navbar() {
     const [token, setToken] = useState<string | undefined>(undefined)

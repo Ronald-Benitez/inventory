@@ -6,6 +6,7 @@ import { type Inventory, type Types, type Enterprises } from '@prisma/client'
 import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast'
 import { IconPencil } from '@tabler/icons-react'
+import { EditBtn } from '../ui'
 
 interface InventoryModalProps {
     data: Inventory | null
@@ -124,15 +125,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
             <Toaster />
             {
                 data ?
-                    <Button
-                        onClick={onOpen}
-                        color='warning'
-                        className="rounded-sm"
-                        size='sm'
-                    >
-                        <IconPencil size={20} strokeWidth={1.5} />
-                    </Button>
-
+                    <EditBtn onClick={onOpen} />
                     :
                     <Button
                         onClick={onOpen}
@@ -141,7 +134,7 @@ function InventoryModal({ data, reload, types, enterprises }: InventoryModalProp
                         Agregar producto
                     </Button>
             }
-            <Modal isOpen={isOpen} onClose={onClose} backdrop='blur'>
+            <Modal isOpen={isOpen} onClose={onClose} backdrop='blur' scrollBehavior='inside' >
                 <ModalContent>
                     <ModalHeader>
                         <h2 className='text-black text-center w-full text-xl my-2'>{data ? "Editar producto" : "Agregar producto"} </h2>

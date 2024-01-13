@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Users {
@@ -17,55 +17,111 @@ model Users {
 }
 
 model Inventory {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  unit      String
-  quantity  Float
-  price     Float
-  unitPrice Float
-  type      Types    @relation(fields: [typeId], references: [id])
-  typeId    Int
-  enterprise Enterprises @relation(fields: [enterpriseId], references: [id])
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  unit         String
+  quantity     Float
+  price        Float
+  unitPrice    Float
+  type         Types       @relation(fields: [typeId], references: [id])
+  typeId       Int
+  enterprise   Enterprises @relation(fields: [enterpriseId], references: [id])
   enterpriseId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  Categories   Categories? @relation(fields: [categoriesId], references: [id])
+  categoriesId Int?
 }
 
 model Products {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  type      Types    @relation(fields: [typeId], references: [id])
-  typeId    Int
-  enterprise Enterprises @relation(fields: [enterpriseId], references: [id])
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  type         Types       @relation(fields: [typeId], references: [id])
+  typeId       Int
+  enterprise   Enterprises @relation(fields: [enterpriseId], references: [id])
   enterpriseId Int
-  description String
-  price     Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  description  String
+  price        Float
+  cost         Float
+  available    Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  discounts    Discounts[]
+  images       Images[]
+  Categories   Categories? @relation(fields: [categoriesId], references: [id])
+  categoriesId Int?
+}
+
+model Images {
+  id         Int       @id @default(autoincrement())
+  url        String
+  Products   Products? @relation(fields: [productsId], references: [id])
+  productsId Int?
+}
+
+model Discounts {
+  id         Int      @id @default(autoincrement())
+  value      Float
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  products   Products @relation(fields: [productsId], references: [id])
+  productsId Int
 }
 
 model Types {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   inventories Inventory[]
-  products Products[]
+  products    Products[]
+}
+
+model Categories {
+  id           Int         @id @default(autoincrement())
+  name         String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  enterpriseId Int
+  Enterprises  Enterprises @relation(fields: [enterpriseId], references: [id])
+  inventories  Inventory[]
+  products     Products[]
+}
+
+model Enterprises {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  inventories Inventory[]
+  products    Products[]
+  categories  Categories[]
+}
+
+model Orders {
+  id         Int      @id @default(autoincrement())
+  client     String
+  totalPrice Float
+  received   Float    @default(0)
+  totalCost  Float
+  paid       Boolean  @default(false)
+  delivered  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  sales      Sales[]
 }
 
 model Sales {
   id        Int      @id @default(autoincrement())
-  products  String
-  total     Float
+  paid      Boolean  @default(false)
+  name      String
+  price     Float
+  cost      Float
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Enterprises {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  inventories Inventory[]
-  products Products[]
+  Orders    Orders   @relation(fields: [ordersId], references: [id], onDelete: Cascade)
+  ordersId  Int
 }

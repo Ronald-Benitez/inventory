@@ -37,3 +37,31 @@ const verifyString = (value: string) => {
     return true;
   }
 };
+
+
+export const getUrlData = (url: string, replace: string) => {
+  url = url.replace(replace, "");
+  const urlArray = url.split("/");
+
+  const arrayLength = urlArray.length;
+  let orderBy = "";
+
+  if (arrayLength === 6) {
+    orderBy = urlArray[5];
+  } else if (arrayLength === 4) {
+    orderBy = urlArray[3];
+  }
+
+
+  const json = {
+    table: urlArray[0],
+    skip: parseInt(urlArray[1]) || 0,
+    take: parseInt(urlArray[2]),
+    filterColumn: urlArray[3],
+    filter: urlArray[4],
+    filterIsString: verifyString(urlArray[5]),
+    orderBy,
+  };
+
+  return json;
+};

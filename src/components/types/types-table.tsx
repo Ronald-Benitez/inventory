@@ -2,13 +2,14 @@
 
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
-import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { IconTrash } from '@tabler/icons-react';
 import { Types } from '@prisma/client';
 
 import Confirm from '../utils/confirm';
 import TypesModal from './types-modal';
+import { Table, Tbody, Thead, Td, Th, DeleteBtn } from '../ui';
+import { handleDelete } from '@/utils/axiosHandler';
 
 interface TypesTableProps {
   data: Types[] | [];
@@ -19,64 +20,47 @@ export default function TypesTable({ data, reload }: TypesTableProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selected, setSelected] = useState<Types | null>(null);
 
-  const handleDelete = () => {
-    axios
-      .delete('/api/types', {
-        data: {
-          id: selected?.id,
-        },
-      })
-      .then((res) => {
-        toast.success('Tipo eliminado');
-        setConfirmDelete(false);
-        reload();
-      })
-      .catch((err) => {
-        const { message } = JSON.parse(err.request.message);
-        toast.error(message);
-        setConfirmDelete(false);
-        console.error(err);
-      });
-  };
+  const onConfirm = () => {
+    handleDelete({
+      id: selected?.id || 0,
+      onSuccess: () => toast.success('Tipo eliminado'),
+      onError: () => toast.error("Error al eliminar el tipo"),
+      onFinally: () => setConfirmDelete(false),
+      reload,
+      url: "/api/types"
+    })
+  }
 
   return (
     <>
       <div className="min-w-full flex justify-center">
         <div className="mb-8 overflow-auto">
-          <table className="min-w-full divide-y divide-gray-200 border border-slate-300">
-            <thead className="bg-gray-50">
+          <Table>
+            <Thead>
               <tr>
-                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Acciones
-                </th>
+                <Th>Nombre</Th>
+                <Th>Acciones</Th>
               </tr>
-            </thead>
-            <tbody>
+            </Thead>
+            <Tbody>
               {data.map((item: Types) => (
                 <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-black">{item.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-black">
+                  <Td>{item.name}</Td>
+                  <Td>
                     <div className="flex justify-center space-x-2">
                       <TypesModal data={item} reload={reload} />
-                      <Button
-                        className="rounded-sm bg-red-500 text-white px-2 py-1"
+                      <DeleteBtn
                         onClick={() => {
                           setSelected(item);
                           setConfirmDelete(true);
                         }}
-                        size="sm"
-                      >
-                        <IconTrash size={20} strokeWidth={1.5} />
-                      </Button>
+                      />
                     </div>
-                  </td>
+                  </Td>
                 </tr>
               ))}
-            </tbody>
-          </table>
+            </Tbody>
+          </Table>
         </div>
 
         <Toaster />
@@ -84,7 +68,7 @@ export default function TypesTable({ data, reload }: TypesTableProps) {
           open={confirmDelete}
           title="Eliminar tipo"
           msg={`¿Estás seguro de eliminar el tipo: ${selected?.name}?`}
-          onConfirm={handleDelete}
+          onConfirm={onConfirm}
           onCancel={() => setConfirmDelete(!confirmDelete)}
         />
       </div>
